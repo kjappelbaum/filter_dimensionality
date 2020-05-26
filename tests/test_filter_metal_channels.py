@@ -8,13 +8,11 @@ import numpy as np
 
 from filter_metal_channels import filter_metal_channels
 
-
-
 THIS_DIR = os.getcwd()
 
 
 def test_get_metal_substructure(get_five_structure_objects):
-    s1, s2, s3, s4, s5 = get_five_structure_objects
+    s1, s2, s3, _, _ = get_five_structure_objects
 
     s1_metall = filter_metal_channels.get_metallic_substructure(s1, return_non_metal_structure=False)
     s2_metall = filter_metal_channels.get_metallic_substructure(s2, return_non_metal_structure=False)
