@@ -1,0 +1,37 @@
+
+##########################################################################
+#               Crystallographic Information Format file
+#               Produced by PyCifRW module
+#
+#  This is a CIF file.  CIF has been adopted by the International
+#  Union of Crystallography as the standard for data archiving and
+#  transmission.
+#
+#  For information on this file format, follow the CIF links at
+#  http://www.iucr.org
+##########################################################################
+
+data_Co-PMOF
+
+_cell_length_a                          17.386
+_cell_length_b                          23.565
+_cell_length_c                          45.325
+_cell_angle_alpha                       90.0
+_cell_angle_beta                        90.0
+_cell_angle_gamma                       90.0
+_cell_volume                            18569.0
+_symmetry_space_group_name_H-M          'P 1'
+_space_group_name_Hall                  'P 1'
+loop_
+  _atom_site_label
+  _atom_site_type_symbol
+  _atom_site_fract_x
+  _atom_site_fract_y
+  _atom_site_fract_z
+         Mo        Mo        0.5       0.06795   0.29993
+         Mo        Mo        0.60104   0.13035   0.24349
+         Mo        Mo        0.67644   0.07435   0.20292
+         Mo        Mo        0.59141   0.0       0.14646
+         Zn        Zn        0.66837   0.0       0.27457
+         Zn        Zn        0.5       0.12561   0.17084
+         Co        Co        0.5       0.5       0.0
