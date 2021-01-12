@@ -12,13 +12,8 @@ from six.moves import zip
 from structure_comp.checker import Checker
 from tqdm.autonotebook import tqdm
 
-from .filter_metal_channels import (
-    get_channel_dimensionality,
-    get_channels,
-    get_metal_metadata,
-    get_metallic_substructure,
-    get_structure_properties,
-)
+from .filter_metal_channels import (get_channel_dimensionality, get_channels, get_metal_metadata,
+                                    get_metallic_substructure, get_structure_properties)
 from .utils import get_bibliometric_information, get_structure_list, isnotebook
 
 logger = logging.getLogger()
@@ -31,8 +26,8 @@ class ScreenMetalChannel:
         self,
         structure_list: list,
         njobs: int = 2,
-        feature_mode: str = "cheap",
-        other_metals: list = ["Al", "In", "Ga"],
+        feature_mode: str = 'cheap',
+        other_metals: list = ['Al', 'In', 'Ga'],
     ):
         self.structure_list = structure_list
         self.njobs = njobs
@@ -40,14 +35,10 @@ class ScreenMetalChannel:
         self.other_metals = other_metals
 
         if isnotebook():
-            logger.warning(
-                "the code is untested in notebook enviornments and is likely to not work there"
-            )
+            logger.warning('the code is untested in notebook enviornments and is likely to not work there')
 
     @classmethod
-    def from_folders(
-        cls, folder_1: str, extension: str = "cif", njobs=2, feature_mode: str = "cheap"
-    ):
+    def from_folders(cls, folder_1: str, extension: str = 'cif', njobs=2, feature_mode: str = 'cheap'):
         """Constructor method for a ScreenMetalChannel object"""
         sl_1 = get_structure_list(folder_1, extension)
         return cls(sl_1, njobs=njobs, feature_mode=feature_mode)
@@ -55,8 +46,8 @@ class ScreenMetalChannel:
     @staticmethod
     def _check_structure(  # pylint:disable=dangerous-default-value
         structure_path: str,
-        feature_mode: str = "cheap",
-        other_metals: list = ["Al", "In", "Ga"],
+        feature_mode: str = 'cheap',
+        other_metals: list = ['Al', 'In', 'Ga'],
     ) -> int:
         """
         Gets number of channels for one cif file.
@@ -72,9 +63,9 @@ class ScreenMetalChannel:
         """
         try:
             s = Structure.from_file(structure_path)
-            s1_metall1, s1_nonmetall = get_metallic_substructure(
-                s, return_non_metal_structure=True, other_metals=other_metals
-            )
+            s1_metall1, s1_nonmetall = get_metallic_substructure(s,
+                                                                 return_non_metal_structure=True,
+                                                                 other_metals=other_metals)
 
             num_channels = get_channels(s1_metall1, s1_nonmetall)
             if len(num_channels) > 0:
@@ -82,19 +73,19 @@ class ScreenMetalChannel:
                 metadata = get_metal_metadata(s1_metall1, num_channels[0][0])
                 structure_features = get_structure_properties(s, mode=feature_mode)
 
-                structure_features["num_channels"] = len(num_channels)
-                structure_features["channel_indices"] = num_channels
+                structure_features['num_channels'] = len(num_channels)
+                structure_features['channel_indices'] = num_channels
                 structure_features.update(metadata)
                 problems = Checker.flag_potential_problems(
                     structure_path,
                     clashing_threshold=0.1,
                     bond_threshold=2.0,
-                    unbound_mode="naive",
-                    hydrogen_mode="CH",
+                    unbound_mode='naive',
+                    hydrogen_mode='CH',
                 )
                 structure_features.update(problems)
                 planes = get_channel_dimensionality(num_channels, s1_metall1)
-                structure_features["planes"] = planes
+                structure_features['planes'] = planes
                 # ToDo: make this optional, as this only will be of use if the filenames are CSD refcodes
                 # bib = get_bibliometric_information(structure_path)
                 # structure_features.update(bib)
@@ -116,21 +107,19 @@ class ScreenMetalChannel:
 
             i = 0
             for structure, structure_features in tqdm(
-                list(
-                    zip(
+                    list(zip(
                         self.structure_list,
                         executor.map(partial_structure_check, self.structure_list),
-                    )
-                ),
-                total=len(self.structure_list),
+                    )),
+                    total=len(self.structure_list),
             ):
                 if structure_features:
-                    structure_features["name"] = structure
+                    structure_features['name'] = structure
                     channel_list.append(structure_features)
                     i += 1
 
                 if i % 100 == 0:
                     df = pd.DataFrame(channel_list)
-                    df.to_csv("backup_{}.csv".format(i))
+                    df.to_csv('backup_{}.csv'.format(i))
 
         return pd.DataFrame(channel_list)
