@@ -8,8 +8,6 @@ from functools import partial
 
 import pandas as pd
 from pymatgen import Structure
-from six.moves import zip
-from structure_comp.checker import Checker
 from tqdm.autonotebook import tqdm
 
 from .filter_metal_channels import (get_channel_dimensionality, get_channels, get_metal_metadata,
@@ -76,14 +74,6 @@ class ScreenMetalChannel:
                 structure_features['num_channels'] = len(num_channels)
                 structure_features['channel_indices'] = num_channels
                 structure_features.update(metadata)
-                problems = Checker.flag_potential_problems(
-                    structure_path,
-                    clashing_threshold=0.1,
-                    bond_threshold=2.0,
-                    unbound_mode='naive',
-                    hydrogen_mode='CH',
-                )
-                structure_features.update(problems)
                 planes = get_channel_dimensionality(num_channels, s1_metall1)
                 structure_features['planes'] = planes
                 # ToDo: make this optional, as this only will be of use if the filenames are CSD refcodes

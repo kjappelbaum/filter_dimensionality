@@ -22,10 +22,8 @@ setup(
         'pandas',
         'mendeleev',
         'matminer',
-        'structure_comp>=0.1',
         'numba',
     ],
-    dependency_links=['https://github.com/kjappelbaum/structure_comp/tarball/master#structure_comp-0.1'],
     extras_require={
         'testing': ['pytest', 'pytest-cov<2.6'],
         'docs': ['sphinx-rtd-theme', 'sphinxcontrib-bibtex'],
